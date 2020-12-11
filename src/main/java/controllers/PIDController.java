@@ -23,4 +23,9 @@ public class PIDController implements Controller {
 
         return p * error + i * integral + d * derivative;
     }
+
+    @Override
+    public String toString() {
+        return String.format("p: %f, i: %f, d: %f", p, i, d);
+    }
 }

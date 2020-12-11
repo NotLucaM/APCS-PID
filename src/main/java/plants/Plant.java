@@ -2,9 +2,12 @@ package plants;
 
 import controllers.Controller;
 
+import java.util.AbstractMap;
+
 public abstract class Plant {
 
     private static final double tolerance = 0.001;
+    private static final int maxSteps = 5000;
 
     // Private not protected in order to avoid potential bugs with classes implementing useFeedback wrong
     private Controller controller;
@@ -34,17 +37,24 @@ public abstract class Plant {
         }
     }
 
-    private int simulate() {
+    private AbstractMap.SimpleEntry<Integer, Integer> simulate() {
         double holdLocation = location;
-        while (location != lastLocation) {
+        lastLocation = Integer.MAX_VALUE;
+        oscillations = -1;
+        int steps = 0;
+        while (Math.abs(location - lastLocation) >= tolerance) {
             lastLocation = location;
             update();
+            steps++;
+            if (steps >= maxSteps) { // TODO: make this better
+                return new AbstractMap.SimpleEntry<>(-1, -1);
+            }
         }
         location = holdLocation;
-        return oscillations;
+        return new AbstractMap.SimpleEntry<>(oscillations, steps);
     }
 
-    public int simulateWith(Controller controller) {
+    public AbstractMap.SimpleEntry<Integer, Integer> simulateWith(Controller controller) {
         this.controller = controller;
         return simulate();
     }
@@ -63,7 +73,6 @@ public abstract class Plant {
 
     public final void setTarget(double target) {
         this.target = target;
-        this.oscillations = -1;
     }
 
     public final void setController(Controller controller) {

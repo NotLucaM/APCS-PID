@@ -12,4 +12,9 @@ public class PController implements Controller {
     public double getFeedback(double current, double target) {
         return p * (target - current);
     }
+
+    @Override
+    public String toString() {
+        return String.format("p: %f", p);
+    }
 }

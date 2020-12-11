@@ -1,10 +1,15 @@
+import controllers.PController;
 import controllers.PIDController;
+import controllers.PTuner;
 import plants.Robot;
 
 public class Main {
 
     public static void main(String[] args) {
-        Robot robot = new Robot(10, 0.1, 10, 0, 100);
-        System.out.println(robot.simulateWith(new PIDController(5, 0, 0)));
+        PTuner tuner = new PTuner(5000);
+        Robot robot = new Robot(5, 0.1, 100, 0, 100);
+
+        PController result = tuner.tune(robot);
+        System.out.println(result.toString());
     }
 }
